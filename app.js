@@ -11,116 +11,133 @@ const products = [
   {
     id: "netflix",
     name: "Netflix",
+    className: "netflix",
     icon: "N",
-    accent: "#e50914",
-    subtitle: "Premium • Films & séries",
-    plans: [
-      { label: "12 mois", price: "Prix sur demande" }
-    ],
-    features: ["Accès premium", "Films & séries", "Multi-appareils", "Livraison rapide"]
-  },
-  {
-    id: "dazn",
-    name: "DAZN",
-    icon: "DAZN",
-    accent: "#ffffff",
-    subtitle: "Sport en direct",
-    plans: [
-      { label: "12 mois", price: "Prix sur demande" }
-    ],
-    features: ["Football", "Boxe", "NBA", "MotoGP", "Accès sport complet"]
-  },
-  {
-    id: "disney",
-    name: "Disney+",
-    icon: "D+",
-    accent: "#1f80e0",
-    subtitle: "Disney • Marvel • Pixar",
-    plans: [
-      { label: "12 mois", price: "Prix sur demande" }
-    ],
-    features: ["Disney", "Marvel", "Star Wars", "Pixar", "Films & séries"]
-  },
-  {
-    id: "prime",
-    name: "Prime Video",
-    icon: "PV",
-    accent: "#00a8e1",
     subtitle: "Films & séries",
-    plans: [
-      { label: "12 mois", price: "Prix sur demande" }
-    ],
-    features: ["Prime Video", "Qualité HD", "Multi-appareils", "Livraison rapide"]
-  },
-  {
-    id: "youtube",
-    name: "YouTube Premium",
-    icon: "▶",
-    accent: "#ff0000",
-    subtitle: "Sans publicité",
-    plans: [
-      { label: "1 mois", price: "Prix sur demande" }
-    ],
-    features: ["Sans pubs", "Lecture arrière-plan", "YouTube Music", "Téléchargement"]
+    plans: ["12 mois"]
   },
   {
     id: "spotify",
     name: "Spotify",
+    className: "spotify",
     icon: "♬",
-    accent: "#1db954",
-    subtitle: "Premium • Musique illimitée",
-    plans: [
-      { label: "1 mois", price: "Prix sur demande" },
-      { label: "3 mois", price: "Prix sur demande" },
-      { label: "12 mois", price: "Prix sur demande" }
-    ],
-    features: ["Sans publicité", "Téléchargement illimité", "Écoute hors ligne", "Sauts illimités"]
+    subtitle: "Musique premium",
+    plans: ["1 mois", "3 mois", "12 mois"]
+  },
+  {
+    id: "disney",
+    name: "Disney+",
+    className: "disney",
+    icon: "D+",
+    subtitle: "Disney • Marvel • Pixar",
+    plans: ["12 mois"]
+  },
+  {
+    id: "prime",
+    name: "Prime Video",
+    className: "prime",
+    icon: "PV",
+    subtitle: "Films & séries",
+    plans: ["12 mois"]
+  },
+  {
+    id: "youtube",
+    name: "YouTube Premium",
+    className: "youtube",
+    icon: "▶",
+    subtitle: "Sans publicité",
+    plans: ["1 mois"]
   },
   {
     id: "crunchyroll",
     name: "Crunchyroll",
+    className: "crunchyroll",
     icon: "C",
-    accent: "#f47521",
-    subtitle: "Anime • Manga • Streaming",
-    plans: [
-      { label: "12 mois", price: "Prix sur demande" }
-    ],
-    features: ["Catalogue anime", "HD / Full HD", "Sans publicité", "Accès rapide"]
+    subtitle: "Anime premium",
+    plans: ["12 mois"]
+  },
+  {
+    id: "dazn",
+    name: "DAZN",
+    className: "dazn",
+    icon: "DAZN",
+    subtitle: "Sport live",
+    plans: ["12 mois"]
   }
 ];
 
-const grid = document.getElementById("categoryGrid");
+const categoryGrid = document.getElementById("categoryGrid");
 
 products.forEach(product => {
   const card = document.createElement("div");
-  card.className = "category";
-  card.style.setProperty("--accent", product.accent);
+  card.className = `category ${product.className}`;
   card.onclick = () => openProduct(product.id);
 
   card.innerHTML = `
-    <div class="category-content">
-      <span class="icon">${product.icon}</span>
-      <span class="name">${product.name}</span>
-      <span class="small">${product.subtitle}</span>
+    <div class="category-logo-text">${product.icon}</div>
+    <div>
+      <h3>${product.name}</h3>
+      <p>${product.subtitle}</p>
     </div>
   `;
 
-  grid.appendChild(card);
+  categoryGrid.appendChild(card);
 });
 
-function showPage(id, btn) {
+function openProduct(id) {
+  const product = products.find(item => item.id === id);
+  const productHero = document.getElementById("productHero");
+
+  productHero.innerHTML = `
+    <h2>${product.name}</h2>
+    <p>${product.subtitle}</p>
+
+    ${product.plans.map(plan => `
+      <div class="plan">
+        <div>
+          <strong>${plan}</strong>
+          <p>Prix sur demande</p>
+        </div>
+        <button class="buy-btn" onclick="orderProduct('${product.id}', '${plan}')">
+          Commander
+        </button>
+      </div>
+    `).join("")}
+  `;
+
+  showPage("product");
+}
+
+function orderProduct(productId, plan) {
+  const product = products.find(item => item.id === productId);
+
+  const order = {
+    action: "order",
+    product: product.name,
+    plan: plan
+  };
+
+  if (tg) {
+    tg.sendData(JSON.stringify(order));
+    tg.showAlert(`Commande envoyée : ${product.name} - ${plan}`);
+  } else {
+    alert(`Commande : ${product.name}\nFormule : ${plan}`);
+  }
+}
+
+function showPage(pageId, button = null) {
   document.querySelectorAll(".page").forEach(page => {
     page.classList.remove("active");
   });
 
-  document.getElementById(id).classList.add("active");
+  document.getElementById(pageId).classList.add("active");
 
   document.querySelectorAll(".nav").forEach(nav => {
     nav.classList.remove("active");
   });
 
-  if (btn) {
-    btn.classList.add("active");
+  if (button) {
+    button.classList.add("active");
   }
 }
 
@@ -128,59 +145,10 @@ function showHome() {
   showPage("home", document.querySelector(".nav"));
 }
 
-function openProduct(id) {
-  const product = products.find(item => item.id === id);
-  const container = document.getElementById("productHero");
-
-  container.style.setProperty("--accent", product.accent);
-
-  container.innerHTML = `
-    <div class="product-head">
-      <h2>${product.name}</h2>
-      <p>${product.subtitle}</p>
-    </div>
-
-    <div class="product-body">
-      <h3>Offres disponibles</h3>
-
-      <div class="plans">
-        ${product.plans.map(plan => `
-          <button class="plan-btn" onclick="selectPlan('${product.id}', '${plan.label}', '${plan.price}')">
-            <strong>${plan.label}</strong>
-            <span>${plan.price}</span>
-          </button>
-        `).join("")}
-      </div>
-
-      <h3>Inclus</h3>
-
-      <div class="features">
-        ${product.features.map(feature => `
-          <div class="feature">✅ ${feature}</div>
-        `).join("")}
-      </div>
-    </div>
-  `;
-
-  showPage("product");
-}
-
-function selectPlan(productId, label, price) {
-  const product = products.find(item => item.id === productId);
-
-  const payload = {
-    action: "order",
-    product: product.name,
-    duration: label,
-    price: price
-  };
-
-  if (tg) {
-    tg.sendData(JSON.stringify(payload));
-    tg.showAlert(`Commande envoyée : ${product.name} - ${label}`);
-  } else {
-    alert(`Commande : ${product.name}\nDurée : ${label}\nPrix : ${price}`);
-  }
+function scrollToCategories() {
+  document.getElementById("categories").scrollIntoView({
+    behavior: "smooth"
+  });
 }
 
 function openSupport() {
