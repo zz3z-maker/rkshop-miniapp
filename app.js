@@ -86,7 +86,7 @@ const products = [
   }
 ];
 
-const categoryGrid = document.getElementById("categoryGrid");
+ const grid = document.getElementById("grid");
 
 function buildCategories() {
   categoryGrid.innerHTML = "";
