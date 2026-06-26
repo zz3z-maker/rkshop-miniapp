@@ -3,98 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <meta name="theme-color" content="#090806" />
-  <title>RKShop Mini App</title>
+  <meta name="theme-color" content="#080808" />
+  <title>RKShop</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-  <div class="background"></div>
-  <div class="shade"></div>
+  <div class="bg"></div>
+  <div class="overlay"></div>
 
   <main class="app">
-
     <section id="home" class="page active">
       <header class="hero">
-        <img src="logo.png" alt="RKShop" class="main-logo" />
-
-        <div class="hero-card">
+        <img src="logo.png" class="logo" alt="RKShop" />
+        <div class="heroBox">
           <h1>RKSHOP</h1>
-          <p>Vos abonnements digitaux, au meilleur prix.</p>
+          <p>Vos abonnements digitaux au meilleur prix.</p>
         </div>
-
-        <button class="enter-btn" onclick="scrollToCategories()">
-          Entrer dans la boutique
-        </button>
       </header>
 
-      <section class="trust-row">
-        <div>
-          <span>⚡</span>
-          <b>Livraison rapide</b>
-        </div>
-        <div>
-          <span>🔒</span>
-          <b>Paiement sécurisé</b>
-        </div>
-        <div>
-          <span>🎧</span>
-          <b>Support 24/7</b>
-        </div>
+      <section class="trust">
+        <div>⚡<span>Livraison<br>rapide</span></div>
+        <div>🔒<span>Paiement<br>sécurisé</span></div>
+        <div>🎧<span>Support<br>24/7</span></div>
       </section>
 
-      <section id="categories" class="categories-section">
-        <h2>Catégories</h2>
-        <div id="categoryGrid" class="category-grid"></div>
-      </section>
+      <h2 class="title">Catégories</h2>
+      <section id="grid" class="grid"></section>
     </section>
 
     <section id="product" class="page">
-      <button class="back-btn" onclick="showHome()">← Retour</button>
-      <div id="productHero" class="product-view"></div>
+      <button class="back" onclick="goHome()">← Retour</button>
+      <div id="productContent"></div>
     </section>
 
     <section id="orders" class="page">
-      <h2>Commandes</h2>
-      <div class="info-card">
-        <h3>Suivi des commandes</h3>
-        <p>Les commandes passées depuis la mini-app seront envoyées à ton bot Telegram.</p>
+      <h2 class="title">Commande</h2>
+      <div class="panel">
+        <h3>Dernière commande</h3>
+        <p id="lastOrder">Aucune commande récente.</p>
       </div>
     </section>
 
     <section id="links" class="page">
-      <h2>Liens utiles</h2>
-
-      <button class="link-card" onclick="openSupport()">
-        💬 Contacter le support
-      </button>
-
-      <button class="link-card" onclick="openSnap()">
-        👻 Snapchat RKShop
-      </button>
-
-      <button class="link-card" onclick="openTelegram()">
-        📲 Telegram RKShop
-      </button>
+      <h2 class="title">Liens</h2>
+      <button class="link" onclick="openSnap()">👻 Commander sur Snap</button>
+      <button class="link" onclick="openSnap()">💬 Support RKShop</button>
     </section>
-
   </main>
 
-  <nav class="bottom-nav">
-    <button class="nav active" onclick="showPage('home', this)">
-      <span>🏠</span>
-      Accueil
-    </button>
-
-    <button class="nav" onclick="showPage('orders', this)">
-      <span>✅</span>
-      Commande
-    </button>
-
-    <button class="nav" onclick="showPage('links', this)">
-      <span>🔗</span>
-      Liens
-    </button>
+  <nav class="nav">
+    <button class="active" onclick="showPage('home', this)">🏠<span>Accueil</span></button>
+    <button onclick="showPage('orders', this)">✅<span>Commande</span></button>
+    <button onclick="showPage('links', this)">🔗<span>Liens</span></button>
   </nav>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
