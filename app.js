@@ -7,138 +7,179 @@ if (tg) {
   tg.setBackgroundColor("#090806");
 }
 
+const SNAP_URL = "https://www.snapchat.com/add/rkshop33k";
+
 const products = [
   {
-    id: "netflix",
-    name: "Netflix",
-    className: "netflix",
-    icon: "N",
-    subtitle: "Films & séries",
-    plans: ["12 mois"]
+    id: "chatgpt",
+    name: "ChatGPT Go",
+    className: "chatgpt",
+    icon: "AI",
+    image: "chatgpt.png",
+    subtitle: "IA premium • Productivité",
+    plans: [{ label: "3 mois", price: "7,50€" }],
+    features: ["Accès IA premium", "Réponses rapides", "Compte privé", "Livraison rapide"]
   },
   {
     id: "spotify",
-    name: "Spotify",
+    name: "Spotify Premium",
     className: "spotify",
     icon: "♬",
-    subtitle: "Musique premium",
-    plans: ["1 mois", "3 mois", "12 mois"]
-  },
-  {
-    id: "disney",
-    name: "Disney+",
-    className: "disney",
-    icon: "D+",
-    subtitle: "Disney • Marvel • Pixar",
-    plans: ["12 mois"]
-  },
-  {
-    id: "prime",
-    name: "Prime Video",
-    className: "prime",
-    icon: "PV",
-    subtitle: "Films & séries",
-    plans: ["12 mois"]
-  },
-  {
-    id: "youtube",
-    name: "YouTube Premium",
-    className: "youtube",
-    icon: "▶",
-    subtitle: "Sans publicité",
-    plans: ["1 mois"]
-  },
-  {
-    id: "crunchyroll",
-    name: "Crunchyroll",
-    className: "crunchyroll",
-    icon: "C",
-    subtitle: "Anime premium",
-    plans: ["12 mois"]
+    image: "spotify.png",
+    subtitle: "Musique sans limites",
+    plans: [
+      { label: "1 mois", price: "Prix sur demande" },
+      { label: "3 mois", price: "2,50€" },
+      { label: "12 mois", price: "Prix sur demande" }
+    ],
+    features: ["Sans publicité", "Téléchargement illimité", "Écoute hors ligne", "Sauts illimités"]
   },
   {
     id: "dazn",
     name: "DAZN",
     className: "dazn",
     icon: "DAZN",
-    subtitle: "Sport live",
-    plans: ["12 mois"]
+    image: "dazn.png",
+    subtitle: "Sport en direct",
+    plans: [{ label: "12 mois", price: "4€" }],
+    features: ["Football", "Boxe", "NBA", "MotoGP", "Accès sport complet"]
+  },
+  {
+    id: "crunchyroll",
+    name: "Crunchyroll",
+    className: "crunchyroll",
+    icon: "C",
+    image: "crunchyroll.png",
+    subtitle: "Anime premium",
+    plans: [{ label: "12 mois", price: "2,50€" }],
+    features: ["Catalogue anime", "HD / Full HD", "Sans publicité", "Accès rapide"]
+  },
+  {
+    id: "disney",
+    name: "Disney+",
+    className: "disney",
+    icon: "D+",
+    image: "",
+    subtitle: "Disney • Marvel • Pixar",
+    plans: [{ label: "12 mois", price: "Prix sur demande" }],
+    features: ["Disney", "Marvel", "Star Wars", "Pixar", "Films & séries"]
+  },
+  {
+    id: "youtube",
+    name: "YouTube Premium",
+    className: "youtube",
+    icon: "▶",
+    image: "",
+    subtitle: "Sans publicité",
+    plans: [{ label: "1 mois", price: "Prix sur demande" }],
+    features: ["Sans publicité", "Lecture arrière-plan", "YouTube Music", "Téléchargement"]
+  },
+  {
+    id: "prime",
+    name: "Prime Video",
+    className: "prime",
+    icon: "PV",
+    image: "",
+    subtitle: "Films & séries",
+    plans: [{ label: "12 mois", price: "Prix sur demande" }],
+    features: ["Prime Video", "Qualité HD", "Multi-appareils", "Livraison rapide"]
   }
 ];
 
 const categoryGrid = document.getElementById("categoryGrid");
 
-products.forEach(product => {
-  const card = document.createElement("div");
-  card.className = `category ${product.className}`;
-  card.onclick = () => openProduct(product.id);
+function buildCategories() {
+  categoryGrid.innerHTML = "";
 
-  card.innerHTML = `
-    <div class="category-logo-text">${product.icon}</div>
-    <div>
-      <h3>${product.name}</h3>
-      <p>${product.subtitle}</p>
-    </div>
-  `;
+  products.forEach(product => {
+    const card = document.createElement("div");
+    card.className = `category ${product.className}`;
+    card.onclick = () => openProduct(product.id);
 
-  categoryGrid.appendChild(card);
-});
+    card.innerHTML = `
+      <div class="category-logo-text">${product.icon}</div>
+      <div>
+        <h3>${product.name}</h3>
+        <p>${product.subtitle}</p>
+        <small>${product.plans.map(plan => `${plan.label} • ${plan.price}`).join("<br>")}</small>
+      </div>
+    `;
+
+    categoryGrid.appendChild(card);
+  });
+}
 
 function openProduct(id) {
   const product = products.find(item => item.id === id);
   const productHero = document.getElementById("productHero");
 
-  productHero.innerHTML = `
-    <h2>${product.name}</h2>
-    <p>${product.subtitle}</p>
+  const imageBlock = product.image
+    ? `<img class="product-poster" src="${product.image}" alt="${product.name}">`
+    : "";
 
-    ${product.plans.map(plan => `
-      <div class="plan">
-        <div>
-          <strong>${plan}</strong>
-          <p>Prix sur demande</p>
+  productHero.innerHTML = `
+    ${imageBlock}
+
+    <div class="product-content ${product.className}">
+      <h2>${product.name}</h2>
+      <p>${product.subtitle}</p>
+
+      <h3>Offres disponibles</h3>
+
+      ${product.plans.map(plan => `
+        <div class="plan">
+          <div>
+            <strong>${plan.label}</strong>
+            <p>${plan.price}</p>
+          </div>
+          <button class="buy-btn" onclick="orderProduct('${product.id}', '${plan.label}', '${plan.price}')">
+            Commander
+          </button>
         </div>
-        <button class="buy-btn" onclick="orderProduct('${product.id}', '${plan}')">
-          Commander
-        </button>
+      `).join("")}
+
+      <h3>Inclus</h3>
+
+      <div class="features">
+        ${product.features.map(feature => `<div class="feature">✅ ${feature}</div>`).join("")}
       </div>
-    `).join("")}
+    </div>
   `;
 
   showPage("product");
 }
 
-function orderProduct(productId, plan) {
+function orderProduct(productId, plan, price) {
   const product = products.find(item => item.id === productId);
 
   const order = {
-    action: "order",
     product: product.name,
-    plan: plan
+    plan,
+    price
   };
 
-  if (tg) {
-    tg.sendData(JSON.stringify(order));
-    tg.showAlert(`Commande envoyée : ${product.name} - ${plan}`);
-  } else {
-    alert(`Commande : ${product.name}\nFormule : ${plan}`);
+  localStorage.setItem("rkshop_last_order", JSON.stringify(order));
+
+  const lastOrder = document.getElementById("lastOrder");
+  if (lastOrder) {
+    lastOrder.textContent = `${product.name} - ${plan} - ${price}`;
   }
+
+  if (tg) {
+    tg.showAlert(`Commande : ${product.name} - ${plan}`);
+  }
+
+  window.open(SNAP_URL, "_blank");
 }
 
 function showPage(pageId, button = null) {
-  document.querySelectorAll(".page").forEach(page => {
-    page.classList.remove("active");
-  });
-
+  document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
   document.getElementById(pageId).classList.add("active");
 
-  document.querySelectorAll(".nav").forEach(nav => {
-    nav.classList.remove("active");
-  });
+  document.querySelectorAll(".nav").forEach(nav => nav.classList.remove("active"));
+  if (button) button.classList.add("active");
 
-  if (button) {
-    button.classList.add("active");
-  }
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function showHome() {
@@ -146,19 +187,20 @@ function showHome() {
 }
 
 function scrollToCategories() {
-  document.getElementById("categories").scrollIntoView({
-    behavior: "smooth"
-  });
+  document.getElementById("categories").scrollIntoView({ behavior: "smooth" });
 }
 
 function openSupport() {
-  window.open("https://t.me/TON_USERNAME", "_blank");
+  window.open(SNAP_URL, "_blank");
 }
 
 function openSnap() {
-  window.open("https://www.snapchat.com/add/rkshop33k", "_blank");
+  window.open(SNAP_URL, "_blank");
 }
 
 function openTelegram() {
-  window.open("https://t.me/TON_USERNAME", "_blank");
+  window.open(SNAP_URL, "_blank");
 }
+
+buildCategories();
+
